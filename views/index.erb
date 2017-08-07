@@ -1,0 +1,195 @@
+<div class="container" id="main">
+
+  <h1>Pay Me!</h1>
+  <div id="errors">
+    <%= @error %>
+  </div>
+
+  <h3>How much?</h3>
+  <div class="input-group">
+    <span class="input-group-addon">$</span>
+    <input id="amount" type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+    <span class="input-group-addon">.00</span>
+  </div>  
+
+  <h3>Payment details</h3>
+  <ul class="nav nav-tabs">
+    <li class="active">
+      <a href="#card" data-toggle="tab">Card</a>
+    </li>
+    <li>
+      <a href="#alipay" data-toggle="tab">Alipay</a>
+    </li>
+    <li>
+      <a href="#wechat" data-toggle="tab">WeChat Pay</a>
+    </li>
+    <li class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Other <span class="caret"></span></a>
+      <ul class="dropdown-menu" aria-labelledby="dLabel">
+        <li>
+          <a href="#ideal" data-toggle="tab">iDEAL</a>
+        </li>
+        <li>
+          <a href="#giropay" data-toggle="tab">Giropay</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="tab-content clearfix">
+    <div class="tab-pane active" id="card">
+      <form action="charge" method="post" id="payment-form">
+        <div id="card-element"></div>
+        <div id="payment-errors"></div>
+        <input class="btn btn-default pay-btn" type="submit" value="Pay $5.00">
+      </form>
+    </div> <!-- card div -->
+    <div class="tab-pane" id="alipay">
+      <a class="btn btn-default pay-btn" href="#" role="button">Pay $5.00</a>
+      <p>You'll be taken to Alipay to complete your payment</p>
+    </div> <!-- alipay div -->
+    <div class="tab-pane" id="wechat">
+      <div class="qrcode" id="wechat-qrcode"></div>
+      <p>Scan the QR code with your WeChat app to complete</p>
+    </div> <!-- wechat div -->
+    <div class="tab-pane" id="ideal">
+      <p>iDEAL</p>
+    </div> <!-- ideal div -->
+    <div class="tab-pane" id="giropay">
+      <p>Giropay</p>
+    </div> <!-- ideal div -->
+  </div> <!-- tabcontent div -->
+</div><!-- /.container -->
+
+
+<script>
+  const stripe = Stripe('pk_test_vUugg7dllbNRs7nUdqjlhqLE');
+  const elements = stripe.elements();
+
+  //Track payment method
+  var currentPaymentMethod = "#card";
+
+  //Keep track of payment amount
+  var amount = 5;
+  $("#amount").val(amount);
+  $("#amount").on('keyup change', function() {
+    amount = this.value;
+    $("#amount").val(amount);
+
+    //Change things that depend on amount
+    $(".pay-btn").attr("value", "Pay $" + amount + ".00");
+    $(".pay-btn").text("Pay $" + amount + ".00");
+    switch(currentPaymentMethod) {
+      case '#alipay':
+        createAlipaySource(amount);
+      case '#wechat':
+        createWeChatPaySource(amount);
+      default:
+    }
+  });
+
+
+  //Create sources when tabs are clicked
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    currentPaymentMethod = e.target.hash;
+    switch(currentPaymentMethod) {
+      case '#alipay':
+        createAlipaySource(amount);
+      case '#wechat':
+        createWeChatPaySource(amount);
+      default:
+    }
+  });
+
+
+  //Create WeChat Source & QR Code
+  //TO-DO: actually create source
+  //TO-DO: replace rather than append
+  var weChatQrCode = undefined;
+  const createWeChatPaySource = (amount) => {
+    if (weChatQrCode === undefined) {
+      weChatQrCode = new QRCode(document.getElementById("wechat-qrcode"), "http://jindo.dev.naver.com/collie" + parseInt(amount)*100);
+    } else {
+      weChatQrCode.clear();
+      weChatQrCode.makeCode("http://jindo.dev.naver.com/collie" + parseInt(amount)*100);
+    }
+  }
+
+
+  //Create Alipay Source
+  const createAlipaySource = (amount) => {
+    stripe.createSource({
+      type: 'alipay',
+      amount: (parseInt(amount)*100),
+      currency: 'usd',
+      redirect: {
+        return_url: 'https://pay.guayo.money',
+      },
+    }).then(function(result) {
+      $("#alipay a").attr("href", result.source.redirect.url);
+    });
+  } 
+
+
+  //Create card Element
+  const card = elements.create('card', {
+  style: {
+    base: {
+      iconColor: '#666EE8',
+      color: '#31325F',
+      lineHeight: '40px',
+      fontWeight: 300,
+      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+      fontSize: '15px',
+
+      '::placeholder': {
+        color: '#CFD7E0',
+      },
+    },
+  }
+});
+  card.mount('#card-element');
+
+  card.addEventListener('change', ({error}) => {
+    const displayError = document.getElementById('payment-errors');
+    if (error) {
+      displayError.textContent = event.error.message;
+    } else {
+      displayError.textContent = '';
+    }
+  });
+
+  const stripeSourceHandler = (source) => {
+    const form = document.getElementById('payment-form');
+    const hiddenSource = document.createElement('input');
+    hiddenSource.setAttribute('type', 'hidden');
+    hiddenSource.setAttribute('name', 'source');
+    hiddenSource.setAttribute('value', source.id);
+    form.appendChild(hiddenSource);
+
+    const hiddenAmount = document.createElement('input');
+    hiddenAmount.setAttribute('type', 'hidden');
+    hiddenAmount.setAttribute('name', 'amount');
+    hiddenAmount.setAttribute('value', parseInt(amount)*100);
+    form.appendChild(hiddenAmount);
+
+    // Submit the form
+    form.submit();
+  }
+
+  const form = document.getElementById('payment-form');
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const {source, error} = await stripe.createSource(card);
+
+    if (error) {
+      // Inform the user if there was an error
+      const errorElement = document.getElementById('payment-errors');
+      errorElement.textContent = error.message;
+    } else {
+      // Send the token to your server
+      stripeSourceHandler(source);
+    }
+  });
+</script>
