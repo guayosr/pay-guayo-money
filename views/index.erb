@@ -66,14 +66,14 @@
   const stripe = Stripe('pk_test_vUugg7dllbNRs7nUdqjlhqLE');
   const elements = stripe.elements();
 
-  //Track payment method
+  //Track payment method and amount
+  //TO-DO: console error is b/c amount isn't set at base path
   var currentPaymentMethod = "#card";
+  var amount = <%= @amount %>;
 
-  //Keep track of payment amount
-  var amount = 5;
-  $("#amount").val(amount);
-  $("#amount").on('keyup change', function() {
-    amount = this.value;
+  //Update amount
+  const updateAmount = (new_amount) => {
+    amount = new_amount;
     $("#amount").val(amount);
 
     //Change things that depend on amount
@@ -85,7 +85,12 @@
       case '#wechat':
         createWeChatPaySource(amount);
       default:
-    }
+    };
+  };
+  updateAmount(amount);
+
+  $("#amount").on('keyup change', function() {
+    updateAmount(this.value);
   });
 
 
@@ -112,8 +117,8 @@
     } else {
       weChatQrCode.clear();
       weChatQrCode.makeCode("http://jindo.dev.naver.com/collie" + parseInt(amount)*100);
-    }
-  }
+    };
+  };
 
 
   //Create Alipay Source
@@ -128,7 +133,7 @@
     }).then(function(result) {
       $("#alipay a").attr("href", result.source.redirect.url);
     });
-  } 
+  } ;
 
 
   //Create card Element

@@ -4,6 +4,12 @@ require 'stripe'
 Stripe.api_key = ENV["STRIPE_SECRET_KEY"]
 
 get '/' do
+  @amount = 10
+  erb :index
+end
+
+get '/:amount' do
+  @amount = params['amount']
   erb :index
 end
 
