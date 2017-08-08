@@ -1,72 +1,4 @@
-<div class="container" id="main">
-
-  <h1>Pay Me!</h1>
-  <div id="errors">
-    <%= @error %>
-  </div>
-
-  <h3>How much?</h3>
-  <div class="input-group">
-    <span class="input-group-addon">$</span>
-    <input id="amount" type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-    <span class="input-group-addon">.00</span>
-  </div>  
-
-  <h3>Payment details</h3>
-  <ul class="nav nav-tabs">
-    <li class="active">
-      <a href="#card" data-toggle="tab">Card</a>
-    </li>
-    <li>
-      <a href="#alipay" data-toggle="tab">Alipay</a>
-    </li>
-    <li>
-      <a href="#wechat" data-toggle="tab">WeChat Pay</a>
-    </li>
-    <li class="dropdown">
-      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Other <span class="caret"></span></a>
-      <ul class="dropdown-menu" aria-labelledby="dLabel">
-        <li>
-          <a href="#ideal" data-toggle="tab">iDEAL</a>
-        </li>
-        <li>
-          <a href="#giropay" data-toggle="tab">Giropay</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-
-  <div class="tab-content clearfix">
-    <div class="tab-pane active" id="card">
-      <form action="charge" method="post" id="payment-form">
-        <div id="card-element"></div>
-        <div id="payment-errors"></div>
-        <input class="btn btn-default pay-btn" type="submit" value="Pay $5.00">
-      </form>
-    </div> <!-- card div -->
-    <div class="tab-pane" id="alipay">
-      <a class="btn btn-default pay-btn" href="#" role="button">Pay $5.00</a>
-      <p>You'll be taken to Alipay to complete your payment</p>
-    </div> <!-- alipay div -->
-    <div class="tab-pane" id="wechat">
-      <div class="qrcode" id="wechat-qrcode"></div>
-      <p>Scan the QR code with your WeChat app to complete</p>
-    </div> <!-- wechat div -->
-    <div class="tab-pane" id="ideal">
-      <p>iDEAL</p>
-    </div> <!-- ideal div -->
-    <div class="tab-pane" id="giropay">
-      <p>Giropay</p>
-    </div> <!-- ideal div -->
-  </div> <!-- tabcontent div -->
-</div><!-- /.container -->
-
-
-<!-- JAVASCRIPT -->
-<!-- TO-DO: move to own file(s) -->
-
-<script>
-  //API KEYS & INIT
+//API KEYS & INIT
 const stripe = Stripe('pk_test_vUugg7dllbNRs7nUdqjlhqLE');
 const elements = stripe.elements();
 
@@ -215,4 +147,3 @@ form.addEventListener('submit', async (event) => {
     stripeSourceHandler(source);
   }
 });
-</script>
