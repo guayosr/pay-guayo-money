@@ -37,7 +37,7 @@ const stripeSourceHandler = (source) => {
   const hiddenAmount = document.createElement('input');
   hiddenAmount.setAttribute('type', 'hidden');
   hiddenAmount.setAttribute('name', 'amount');
-  hiddenAmount.setAttribute('value', parseInt(amount)*100);
+  hiddenAmount.setAttribute('value', parseInt(window.AMOUNT)*100);
   form.appendChild(hiddenAmount);
 
   // Submit the form

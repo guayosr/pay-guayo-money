@@ -4,26 +4,24 @@ const elements = stripe.elements();
 
 //Track payment method and amount
 let currentPaymentMethod = "#card";
-let amount = window.AMOUNT;
-
 
 //===HANDLE AMOUNT CHANGES==
 const updateAmount = (new_amount) => {
-  amount = new_amount;
-  $("#amount").val(amount);
+  window.AMOUNT = new_amount;
+  $("#amount").val(window.AMOUNT);
 
   //Change things that depend on amount
-  $(".pay-btn").attr("value", "Pay $" + amount + ".00");
-  $(".pay-btn").text("Pay $" + amount + ".00");
+  $(".pay-btn").attr("value", "Pay $" + window.AMOUNT + ".00");
+  $(".pay-btn").text("Pay $" + window.AMOUNT + ".00");
   switch(currentPaymentMethod) {
     case '#alipay':
-      createAlipaySource(amount);
+      createAlipaySource(window.AMOUNT);
     case '#wechat':
-      createWeChatPaySource(amount);
+      createWeChatPaySource(window.AMOUNT);
     default:
   };
 };
-updateAmount(amount);
+updateAmount(window.AMOUNT);
 
 
 $("#amount").on('keyup change', function() {
@@ -37,9 +35,9 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
   currentPaymentMethod = e.target.hash;
   switch(currentPaymentMethod) {
     case '#alipay':
-      createAlipaySource(amount);
+      createAlipaySource(window.AMOUNT);
     case '#wechat':
-      createWeChatPaySource(amount);
+      createWeChatPaySource(window.AMOUNT);
     default:
   }
 });

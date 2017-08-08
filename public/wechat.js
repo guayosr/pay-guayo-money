@@ -1,5 +1,6 @@
 //==WECHAT==
 //TO-DO: awaiting weChatQrCode fix
+//TO-DO: use mobile flow when on mobile (this looks interesting: https://github.com/fnando/browser)
 let weChatQrCode = undefined;
 const createWeChatPaySource = (amount) => {
   if (weChatQrCode === undefined) {
