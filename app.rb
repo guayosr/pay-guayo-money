@@ -1,7 +1,10 @@
 require 'sinatra'
 require 'stripe'
+
+set :publishable_key, ENV["STRIPE_PUBLISHABLE_KEY"]
+set :secret_key, ENV["STRIPE_SECRET_KEY"]
  
-Stripe.api_key = ENV["STRIPE_SECRET_KEY"]
+Stripe.api_key = settings.secret_key
 
 get '/' do
   @amount = 10

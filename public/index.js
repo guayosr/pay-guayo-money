@@ -1,5 +1,5 @@
   //API KEYS & INIT
-const stripe = Stripe('pk_test_vUugg7dllbNRs7nUdqjlhqLE');
+const stripe = Stripe(window.PUB_KEY);
 const elements = stripe.elements();
 
 //Track payment method and amount
