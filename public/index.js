@@ -16,6 +16,10 @@ const updateAmount = (new_amount) => {
   switch(currentPaymentMethod) {
     case '#alipay':
       createAlipaySource(window.AMOUNT);
+    case '#ideal':
+      createIdealSource(window.AMOUNT);
+    case '#p24':
+      createP24Source(window.AMOUNT); 
     case '#wechat':
       createWeChatPaySource(window.AMOUNT);
     default:
@@ -33,9 +37,14 @@ $("#amount").on('keyup change', function() {
 //Create sources when tabs are clicked
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
   currentPaymentMethod = e.target.hash;
+  console.log(currentPaymentMethod);
   switch(currentPaymentMethod) {
     case '#alipay':
       createAlipaySource(window.AMOUNT);
+    case '#ideal':
+      createIdealSource(window.AMOUNT);
+    case '#p24':
+      createP24Source(window.AMOUNT);
     case '#wechat':
       createWeChatPaySource(window.AMOUNT);
     default:

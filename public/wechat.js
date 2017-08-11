@@ -4,7 +4,7 @@
 let weChatQrCode = undefined;
 const createWeChatPaySource = (amount) => {
   if (weChatQrCode === undefined) {
-    weChatQrCode = new QRCode(document.getElementById("wechat-qrcode"), "http://google.com" + amount);
+    weChatQrCode = new QRCode(document.getElementById("wechat-qrcode"), "http://google.com/" + amount);
     // stripe.createSource({
     //   type: 'wechat',
     //   amount: (parseInt(amount)*100),
@@ -14,7 +14,7 @@ const createWeChatPaySource = (amount) => {
     // });
   } else {
     weChatQrCode.clear();
-    weChatQrCode.makeCode("http://google.com" + amount);
+    weChatQrCode.makeCode("http://google.com/" + amount);
     // stripe.createSource({
     //   type: 'wechat',
     //   amount: (parseInt(amount)*100),

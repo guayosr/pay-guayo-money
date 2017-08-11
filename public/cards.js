@@ -8,7 +8,6 @@ style: {
     fontWeight: 300,
     fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
     fontSize: '15px',
-
     '::placeholder': {
       color: '#CFD7E0',
     },
