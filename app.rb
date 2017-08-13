@@ -6,6 +6,10 @@ set :secret_key, ENV["STRIPE_SECRET_KEY"]
  
 Stripe.api_key = settings.secret_key
 
+before do
+  redirect request.url.sub('http', 'https') unless request.secure?
+end
+
 get '/' do
   @amount = 10
   erb :index
