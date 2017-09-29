@@ -1,14 +1,14 @@
 require 'sinatra'
 require 'stripe'
 
-set :publishable_key, ENV["STRIPE_PUBLISHABLE_KEY"]
-set :secret_key, ENV["STRIPE_SECRET_KEY"]
+set :publishable_key, ENV["STRIPE_TEST_PUBLISHABLE_KEY"]
+set :secret_key, ENV["STRIPE_TEST_SECRET_KEY"]
  
 Stripe.api_key = settings.secret_key
 
-before do
-  redirect request.url.sub('http', 'https') unless request.secure?
-end
+# before do
+#   redirect request.url.sub('http', 'https') unless request.secure?
+# end
 
 get '/' do
   @amount = 10
@@ -40,6 +40,7 @@ post '/charge' do
     body = e.json_body
     err  = body[:error]
     @error = err[:message]
+    @amount = params[:amount]
 
     erb :index
   end

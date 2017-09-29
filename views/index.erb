@@ -12,7 +12,11 @@
     <span class="input-group-addon">.00</span>
   </div>  
 
-  <h3>Payment details</h3>
+  <div id="payment-request">
+    <div id="the-button"></div>
+    <p>Or, more payment options ...</p>  
+  </div>
+  
   <ul class="nav nav-tabs">
     <li class="active">
       <a href="#card" data-toggle="tab">Card</a>
@@ -34,6 +38,9 @@
         </li>
         <li>
           <a href="#multibanco" data-toggle="tab">Multibanco</a>
+        </li>
+        <li>
+          <a href="#eps" data-toggle="tab">EPS</a>
         </li>
         <li>
           <a href="#p24" data-toggle="tab">P24</a>
@@ -68,6 +75,10 @@
     <div class="tab-pane" id="multibanco">
       <p>Multibanco coming soon...</p>
     </div> <!-- multibanco div -->
+    <div class="tab-pane" id="eps">
+      <a class="btn btn-default pay-btn" href="#" role="button">Pay $5.00</a>
+      <p>You'll be taken to EPS to complete your payment</p>
+    </div> <!-- eps div -->
     <div class="tab-pane" id="p24">
       <a class="btn btn-default pay-btn" href="#" role="button">Pay $5.00</a>
       <p>You'll be taken to P24 to complete your payment</p>
@@ -78,9 +89,10 @@
 
 
 <!-- JAVASCRIPT -->
-<script>window.AMOUNT = <%= @amount %>;</script>
+<script>window.AMOUNT = <%= @amount %></script>
 <script>window.PUB_KEY = "<%= settings.publishable_key %>"</script>
 <script src="index.js"></script>
+<script src="payment_request.js"></script>
 <script src="cards.js"></script>
 <script src="wechat.js"></script>
 <script src="alipay.js"></script>
